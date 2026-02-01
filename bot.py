@@ -1,10 +1,11 @@
-from flask import Flask
-import threading
+import os
 import re
 import random
 import discord
 
-TOKEN = "DISCORD_TOKEN"
+TOKEN = os.getenv("DISCORD_TOKEN")
+if not TOKEN:
+    raise RuntimeError("Faltou DISCORD_TOKEN")
 
 DICE_RE = re.compile(r"^\s*(\d*)\s*d\s*(\d+)\s*([+-]\s*\d+)?\s*$", re.I)
 
@@ -47,17 +48,5 @@ async def on_message(message):
             )
         except Exception as e:
             await message.reply(f"❌ {e}", mention_author=False)
-if not TOKEN:
-    raise RuntimeError("Faltou DISCORD_TOKEN")
-app = Flask("")
-
-@app.route("/")
-def home():
-    return "Bot online"
-
-def run():
-    app.run(host="0.0.0.0", port=10000)
-
-threading.Thread(target=run).start()
 
 client.run(TOKEN)
