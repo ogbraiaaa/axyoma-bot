@@ -1,3 +1,5 @@
+from flask import Flask
+import threading
 import re
 import random
 import discord
@@ -47,5 +49,15 @@ async def on_message(message):
             await message.reply(f"❌ {e}", mention_author=False)
 if not TOKEN:
     raise RuntimeError("Faltou DISCORD_TOKEN")
+app = Flask("")
+
+@app.route("/")
+def home():
+    return "Bot online"
+
+def run():
+    app.run(host="0.0.0.0", port=10000)
+
+threading.Thread(target=run).start()
 
 client.run(TOKEN)
