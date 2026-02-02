@@ -1,3 +1,5 @@
+import threading
+from flask import Flask
 import os
 import re
 import random
@@ -92,5 +94,16 @@ async def on_message(message: discord.Message):
 
     except Exception as e:
         await message.reply(f"❌ {e}", mention_author=False)
+app = Flask(__name__)
+
+@app.get("/")
+def home():
+    return "ok"
+
+def run_web():
+    port = int(os.environ.get("PORT", "10000"))
+    app.run(host="0.0.0.0", port=port)
+
+threading.Thread(target=run_web, daemon=True).start()
 
 client.run(TOKEN)
